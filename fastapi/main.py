@@ -76,3 +76,4 @@ async def detect_plate_api_get():
 @app.get("/")
 async def get_hello():
     return {"message": "Hello!"}
+
