@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plaka Okuma</title>
+</head>
+<body>
+  <h1>Plaka Okuma</h1>
+  <form id="uploadForm">
+    <input type="file" id="imageInput" accept="image/*" required>
+    <button type="submit">Görsel Yükle</button>
+  </form>
+  <button id="getDataButton">GET Verisini Al</button>
+  <div id="result">
+    <h2>Plaka:</h2>
+    <p id="plateNumber"></p>
+    <h2>GET Yanıtı:</h2>
+    <p id="getResponse"></p>
+  </div>
+
+  <script src="plate_det.js"></script>
+</body>
+</html>
