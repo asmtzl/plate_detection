@@ -25,7 +25,7 @@ app.add_middleware(
 )
 
 from pymongo import MongoClient
-mongodb_uri = 'mongodb+srv://asmtzl:asmtzl123@platedet.xlpknrp.mongodb.net/?retryWrites=true&w=majority&appName=plateDet'
+mongodb_uri = 'mongodb+srv://asmtzl:pasw@platedet.xlpknrp.mongodb.net/?retryWrites=true&w=majority&appName=plateDet'
 port = 8000
 client = MongoClient(mongodb_uri, port)
 db = client["plateUsers"]
