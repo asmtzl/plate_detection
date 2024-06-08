@@ -13,12 +13,12 @@ from fastapi.responses import JSONResponse
 def detect(image):
     target_size=(640,640)
     pre_im = image
-    pre_im = cv2.resize(image, target_size)
+    """pre_im = cv2.resize(image, target_size)
     pre_im = cv2.GaussianBlur(pre_im, (3, 3), 0)
     cv2.imshow('prep',pre_im)
     cv2.waitKey(0)
-    cv2.destroyAllWindows()
-    model = YOLO('E:/VS Code Projects\Py/fastapi/fastapitry/model/best.pt')
+    cv2.destroyAllWindows()"""
+    model = YOLO('E:/VS Code Projects/plate_detection/fastapi/model/best2.pt')
     #model = torch.load('E:/VS Code Projects/Py/fastapitry/model/best.pt')
     #prediction_json = model.predict(small, confidence=40, overlap=30).json()
     results = model.predict(pre_im, conf=0.40, iou=0.30)
@@ -46,9 +46,9 @@ def detect(image):
         img = cv2.rectangle(img, start_point, end_point, color=(0,255,0), thickness=2)
         plate = img[y0:y1,x0:x1]
 
-    cv2.imshow('plate',plate)
+    """cv2.imshow('plate',plate)
     cv2.waitKey(0)
-    cv2.destroyAllWindows()   
+    cv2.destroyAllWindows()"""   
     
     if plate is None:
             return JSONResponse(content={"error": "No bounding boxes found."}, status_code=404)
