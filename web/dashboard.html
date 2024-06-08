@@ -4,58 +4,386 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    
     <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:400,600,700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            text-decoration: none;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            padding: 20px;
+            background: #e1ecf2;
         }
-        .dashboard-container {
-            background-color: white;
-            padding: 20px;
+
+        .wrapper {
+            margin: 10px;
+        }
+
+        .wrapper .top_navbar {
+            width: calc(100% - 20px);
+            height: 60px;
+            display: flex;
+            position: fixed;
+            top: 10px;
+        }
+
+        .wrapper .top_navbar .hamburger {
+            width: 70px;
+            height: 100%;
+            background: #2e4ead;
+            padding: 15px 17px;
+            border-top-left-radius: 20px;
+            cursor: pointer;
+        }
+
+        .wrapper .top_navbar .hamburger div {
+            width: 35px;
+            height: 4px;
+            background: #92a6e2;
+            margin: 5px 0;
             border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        .dashboard-container h2 {
-            margin-bottom: 20px;
+
+        .wrapper .top_navbar .top_menu {
+            width: calc(100% - 70px);
+            height: 100%;
+            background: #fff;
+            border-top-right-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
         }
-        .dashboard-container button {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            background-color: #007BFF;
+
+        .wrapper .top_navbar .top_menu .logo {
+            color: #2e4ead;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 3px;
+        }
+
+        .wrapper .top_navbar .top_menu .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .wrapper .top_navbar .top_menu .user-info span {
+            margin-right: 20px;
+            font-size: 16px;
+        }
+
+        .wrapper .top_navbar .top_menu .logout-btn {
+            background-color: #FF6347;
             border: none;
             color: white;
+            padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
         }
-        .dashboard-container button:hover {
+
+        .wrapper .top_navbar .top_menu .logout-btn:hover {
+            background-color: #d9534f;
+        }
+
+        .wrapper .sidebar {
+            position: fixed;
+            top: 70px;
+            left: 10px;
+            background: #2e4ead;
+            width: 200px;
+            height: calc(100% - 80px);
+            border-bottom-left-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .wrapper .sidebar ul li a {
+            display: block;
+            padding: 20px;
+            color: #fff;
+            position: relative;
+            margin-bottom: 1px;
+            color: #92a6e2;
+            white-space: nowrap;
+        }
+
+        .wrapper .sidebar ul li a:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: #92a6e2;
+            display: none;
+        }
+
+        .wrapper .sidebar ul li a span.icon {
+            margin-right: 10px;
+            display: inline-block;
+        }
+
+        .wrapper .sidebar ul li a span.title {
+            display: inline-block;
+        }
+
+        .wrapper .sidebar ul li a:hover,
+        .wrapper .sidebar ul li a.active {
+            background: #4360b5;
+            color: #fff;
+        }
+
+        .wrapper .sidebar ul li a:hover:before,
+        .wrapper .sidebar ul li a.active:before {
+            display: block;
+        }
+
+        .wrapper .main_container {
+            width: calc(100% - 220px);
+            margin-top: 70px;
+            margin-left: 220px;
+            padding: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .wrapper .main_container .item {
+            background: #fff;
+            margin-bottom: 10px;
+            padding: 15px;
+            font-size: 14px;
+            line-height: 22px;
+        }
+
+        .wrapper.collapse .sidebar {
+            width: 70px;
+        }
+
+        .wrapper.collapse .sidebar ul li a {
+            text-align: center;
+        }
+
+        .wrapper.collapse .sidebar ul li a span.icon {
+            margin: 0;
+        }
+
+        .wrapper.collapse .sidebar ul li a span.title {
+            display: none;
+        }
+
+        .wrapper.collapse .main_container {
+            width: calc(100% - 90px);
+            margin-left: 90px;
+        }
+
+        .file-upload-container {
+            display: none;
+            margin-bottom: 20px;
+        }
+
+        .file-upload-container.active {
+            display: block;
+        }
+
+        /*.file-upload-container input[type="file"] {
+            display: block;
+            margin-bottom: 10px;
+        }*/
+
+        .file-upload-container button {
+            background-color: #007BFF;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .file-upload-container button:hover {
             background-color: #0056b3;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .image-preview-container {
+            width: 50%;
+            margin: 0 auto;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 3rem;
+            border-radius: 20px;
+        }
+
+        .image-preview-container img {
+            width: 100%;
+            display: none;
+            margin-bottom: 30px;
+        }
+        .image-preview-container input {
+            display: none;
+        }
+
+        .image-preview-container label {
+            display: block;
+            width: 45%;
+            height: 45px;
+            margin-left: 25%;
+            text-align: center;
+            background: #8338ec;
+            color: #fff;
+            font-size: 15px;
+            text-transform: Uppercase;
+            font-weight: 400;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 </head>
 <body>
-    <div class="dashboard-container">
-        <h2>Dashboard</h2>
-        <button onclick="uploadVideo()">Video Yükle</button>
-        <button onclick="uploadPhoto()">Fotoğraf Yükle</button>
-        <button onclick="modifyDatabase()">Database Kayıt Değiştir</button>
+    <div class="wrapper">
+        <div class="top_navbar">
+            <div class="hamburger" onclick="toggleSidebar()">
+                <div class="one"></div>
+                <div class="two"></div>
+                <div class="three"></div>
+            </div>
+            <div class="top_menu">
+                <div class="logo">
+                    Dashboard
+                </div>
+                <div class="user-info">
+                    <span id="usernameDisplay"></span>
+                    <button class="logout-btn" onclick="logout()">Çıkış Yap</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <ul>
+                <li><a href="#" onclick="navigate('uploadVideo')"><span class="icon"><i class="fas fa-upload"></i></span><span class="title">Video Yükle</span></a></li>
+                <li><a href="#" onclick="navigate('uploadPhoto')"><span class="icon"><i class="fas fa-upload"></i></span><span class="title">Fotoğraf Yükle</span></a></li>
+                <li><a href="#" onclick="navigate('modifyDatabase')"><span class="icon"><i class="fas fa-database"></i></span><span class="title">Database Kayıt Değiştir</span></a></li>
+            </ul>
+        </div>
+
+        <div class="main_container" id="mainContainer">
+            <!-- İçerik buraya yüklenecek -->
+        </div>
     </div>
 
     <script>
-        function uploadVideo() {
-            alert('Video yükleme işlemi burada gerçekleşecek');
-            // Video yükleme işlemi için gerekli kodlar
+        const baseUrl = 'https://choice-cheetah-rested.ngrok-free.app';
+        document.getElementById('usernameDisplay').innerText = `Kullanıcı: ${localStorage.getItem('username')}`;
+
+        function toggleSidebar() {
+            document.querySelector('.wrapper').classList.toggle('collapse');
         }
 
-        function uploadPhoto() {
-            alert('Fotoğraf yükleme işlemi burada gerçekleşecek');
-            // Fotoğraf yükleme işlemi için gerekli kodlar
+        function navigate(section) {
+            const mainContainer = document.getElementById('mainContainer');
+            mainContainer.innerHTML = ''; // İçeriği temizle
+
+            if (section === 'uploadVideo') {
+                mainContainer.innerHTML = '<div class="item">Video yükleme işlemi burada gerçekleşecek</div>';
+            } else if (section === 'uploadPhoto') {
+                mainContainer.innerHTML = `
+                    
+                    <div class="item file-upload-container active">
+                        <div class="image-preview-container">
+                            <div class="preview">
+                                <img id="preview-selected-image" />
+                            </div>
+                            <label for="file-upload">Upload Image</label>
+                            <input type="file" id="file-upload" accept="image/*" onchange="previewImage(event);" />
+                        </div>
+                        
+                        <button onclick="searchPlate()">Tara</button>
+                    </div>
+                    <div class="result" id="result"></div>
+                `;
+            } else if (section === 'modifyDatabase') {
+                mainContainer.innerHTML = '<div class="item">Database kayıt değiştirme işlemi burada gerçekleşecek</div>';
+            }
         }
 
-        function modifyDatabase() {
-            alert('Database kayıt değiştirme işlemi burada gerçekleşecek');
-            // Database kayıt değiştirme işlemi için gerekli kodlar
+        function logout() {
+            localStorage.removeItem('username');
+            window.location.href = 'login.html';
+        }
+        const previewImage = (event) => {
+            /**
+             * Get the selected files.
+             */
+            const imageFiles = event.target.files;
+            /**
+             * Count the number of files selected.
+             */
+            const imageFilesLength = imageFiles.length;
+            /**
+             * If at least one image is selected, then proceed to display the preview.
+             */
+            if (imageFilesLength > 0) {
+                /**
+                 * Get the image path.
+                 */
+                const imageSrc = URL.createObjectURL(imageFiles[0]);
+                /**
+                 * Select the image preview element.
+                 */
+                const imagePreviewElement = document.querySelector("#preview-selected-image");
+                /**
+                 * Assign the path to the image preview element.
+                 */
+                imagePreviewElement.src = imageSrc;
+                /**
+                 * Show the element by changing the display value to "block".
+                 */
+                imagePreviewElement.style.display = "block";
+            }
+        };
+
+        async function searchPlate() {
+            
+            const fileInput = document.getElementById('file-upload');
+            const file = fileInput.files[0];
+            
+            /*fileReader.onload = event => {
+            preview.setAttribute('src', event.target.result);
+            }*/
+            if (!file) {
+                alert('Lütfen bir dosya seçin');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch(`${baseUrl}/detect_plate/`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const result = await response.json();
+                document.getElementById('result').innerText = `Sonuç: ${result}`;
+            } catch (error) {
+                console.error('Hata:', error);
+                alert('Plaka tarama sırasında bir hata oluştu.');
+            }
         }
     </script>
 </body>
