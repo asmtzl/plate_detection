@@ -14,61 +14,106 @@
             height: 100vh;
             margin: 0;
         }
-        .login-container {
+        .container {
             background-color: white;
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
         }
-        .login-container h2 {
+        .container h2 {
             margin-bottom: 20px;
         }
-        .login-container input {
+        .container input, .container button {
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
-        .login-container button {
-            width: 100%;
-            padding: 10px;
+        .container button {
             background-color: #007BFF;
             border: none;
             color: white;
-            border-radius: 5px;
             cursor: pointer;
         }
-        .login-container button:hover {
+        .container button:hover {
             background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
+    <div class="container" id="login-container">
         <h2>Giriş Yap</h2>
-        <input type="text" placeholder="Kullanıcı Adı" id="username">
-        <input type="password" placeholder="Şifre" id="password">
+        <input type="text" placeholder="Kullanıcı Adı" id="loginUsername">
+        <input type="password" placeholder="Şifre" id="loginPassword">
         <button onclick="login()">Giriş</button>
+        <p>Henüz hesabınız yok mu? <a href="#" onclick="showRegister()">Kayıt Ol</a></p>
+    </div>
+
+    <div class="container" id="register-container" style="display: none;">
+        <h2>Kayıt Ol</h2>
+        <input type="text" placeholder="Kullanıcı Adı" id="registerUsername">
+        <input type="password" placeholder="Şifre" id="registerPassword">
+        <button onclick="register()">Kayıt Ol</button>
+        <p>Zaten hesabınız var mı? <a href="#" onclick="showLogin()">Giriş Yap</a></p>
     </div>
 
     <script>
-        async function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+        const baseUrl = 'https://choice-cheetah-rested.ngrok-free.app';
 
-            const response = await fetch('http://localhost:8000/login', {
+        function showRegister() {
+            document.getElementById('login-container').style.display = 'none';
+            document.getElementById('register-container').style.display = 'block';
+        }
+
+        function showLogin() {
+            document.getElementById('login-container').style.display = 'block';
+            document.getElementById('register-container').style.display = 'none';
+        }
+
+        async function login() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const response = await fetch(`${baseUrl}/login`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({ username, password })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                alert(`Giriş başarılı! Token: ${data.access_token}`);
+                window.location.href = 'dashboard.html';
+            } else {
+                const error = await response.json();
+                alert(`Hata: ${error.detail}`);
+            }
+        }
+
+        async function register() {
+            const username = document.getElementById('registerUsername').value;
+            const password = document.getElementById('registerPassword').value;
+
+            const response = await fetch(`${baseUrl}/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify({ username, password })
             });
 
             if (response.ok) {
                 const data = await response.json();
-                localStorage.setItem('token', data.access_token);
-                window.location.href = 'dashboard.html';
+                alert(data.res);
+                showLogin();
             } else {
-                alert('Geçersiz kullanıcı adı veya şifre');
+                const error = await response.json();
+                alert(`Hata: ${error.detail}`);
             }
         }
     </script>
