@@ -87,6 +87,7 @@
 
             if (response.ok) {
                 const data = await response.json();
+                localStorage.setItem('username', username);
                 alert(`Giriş başarılı! Token: ${data.access_token}`);
                 window.location.href = 'dashboard.html';
             } else {
