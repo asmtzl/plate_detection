@@ -213,6 +213,11 @@
             font-size: 16px;
             font-weight: bold;
         }
+        .checkresult {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+        }
         .image-preview-container {
             width: 50%;
             margin: 0 auto;
@@ -310,6 +315,7 @@
                         <button onclick="searchPlate()">Tara</button>
                     </div>
                     <div class="result" id="result"></div>
+                    <div class="result" id="checkresult"></div>
                 `;
             } else if (section === 'modifyDatabase') {
                 mainContainer.innerHTML = '<div class="item">Database kayıt değiştirme işlemi burada gerçekleşecek</div>';
@@ -318,7 +324,7 @@
 
         function logout() {
             localStorage.removeItem('username');
-            window.location.href = 'login.html';
+            window.location.href = 'loginPage.html';
         }
         const previewImage = (event) => {
             /**
@@ -353,13 +359,9 @@
         };
 
         async function searchPlate() {
-            
             const fileInput = document.getElementById('file-upload');
             const file = fileInput.files[0];
             
-            /*fileReader.onload = event => {
-            preview.setAttribute('src', event.target.result);
-            }*/
             if (!file) {
                 alert('Lütfen bir dosya seçin');
                 return;
@@ -379,11 +381,36 @@
                 }
 
                 const result = await response.json();
-                document.getElementById('result').innerText = `Sonuç: ${result}`;
+                console.log(result);
+                
+                let plateText = result;
+                if (plateText.startsWith('TR')) {
+                    plateText = plateText.slice(2);
+                    if (plateText.startsWith('I')){
+                    plateText = plateText.slice(1);
+                }
+                }
+                document.getElementById('result').innerText = `Sonuç: ${plateText}`;
+
+                const plateCheckResponse = await fetch(`${baseUrl}/check_plate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ plate_text: plateText }),
+                });
+
+                if (!plateCheckResponse.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const plateCheckResult = await plateCheckResponse.json();
+                document.getElementById('checkresult').innerText = `Plaka Kontrol Sonucu: ${plateCheckResult.message}`;
+
             } catch (error) {
                 console.error('Hata:', error);
                 alert('Plaka tarama sırasında bir hata oluştu.');
-            }
+            }         
         }
     </script>
 </body>
