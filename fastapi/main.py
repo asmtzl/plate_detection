@@ -42,6 +42,8 @@ class Token(BaseModel):
     token_type: str
 class TokenData(BaseModel):
     username: Optional[str] = None
+class PlateCheckRequest(BaseModel):
+    plate_text: str
 
 """UPLOAD_DIR = "uploaded_images"
 os.makedirs(UPLOAD_DIR, exist_ok=True)"""
@@ -118,4 +120,16 @@ def login(request:OAuth2PasswordRequestForm = Depends()):
 		raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail = f'Wrong Username or password')
 	access_token = create_access_token(data={"sub": user["username"] })
 	return {"access_token": access_token, "token_type": "bearer"}
+
+@app.post("/check_plate")
+async def check_plate(request: PlateCheckRequest):
+    collection = db.verifiedPlates
+    plate_text = request.plate_text
+    plate = collection.find_one({"plate": plate_text})
+
+    if plate:
+        return JSONResponse(content={"status": True, "message": "Plate found in database."})
+    else:
+        return JSONResponse(content={"status": False, "message": "Plate not found in database."})
+
 
