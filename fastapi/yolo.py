@@ -13,9 +13,9 @@ from fastapi.responses import JSONResponse
 def detect(image):
     target_size=(640,640)
     pre_im = image
-    """pre_im = cv2.resize(image, target_size)
-    pre_im = cv2.GaussianBlur(pre_im, (3, 3), 0)
-    cv2.imshow('prep',pre_im)
+    #pre_im = cv2.resize(image, target_size)
+    #pre_im = cv2.GaussianBlur(pre_im, (3, 3), 0)
+    """cv2.imshow('prep',pre_im)
     cv2.waitKey(0)
     cv2.destroyAllWindows()"""
     model = YOLO('E:/VS Code Projects/plate_detection/fastapi/model/best2.pt')
@@ -48,7 +48,7 @@ def detect(image):
 
     """cv2.imshow('plate',plate)
     cv2.waitKey(0)
-    cv2.destroyAllWindows()"""   
+    cv2.destroyAllWindows()  """
     
     if plate is None:
             return JSONResponse(content={"error": "No bounding boxes found."}, status_code=404)
@@ -64,7 +64,7 @@ def detect(image):
         plate_text.append(text)
     plate_json = json.dumps(plate_text)
     combined = "".join(plate_text)
-    return plate_json
+    return combined
    
 """image_path = "C:/Users/Acer/Desktop/plate_images/1.jpg"
 image = cv2.imread(image_path)
