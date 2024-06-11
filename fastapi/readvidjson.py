@@ -76,8 +76,8 @@ def process_video(video_path, coco_model, license_plate_model, mot_tracker):
     return results
 
 if __name__ == "__main__":
-    coco_model = YOLO('yolov8n.pt')
-    license_plate_model = YOLO('C:/yolov88/opencvstudy/best.pt')
+    coco_model = YOLO('E:/VS Code Projects/plate_detection/fastapi/model/yolov8n.pt')
+    license_plate_model = YOLO('E:/VS Code Projects/plate_detection/fastapi/model/best2.pt')
     mot_tracker = Sort()
     video_path = 'C:/yolov88/opencvstudy/plakaoku.mp4'
     results = process_video(video_path, coco_model, license_plate_model, mot_tracker)
